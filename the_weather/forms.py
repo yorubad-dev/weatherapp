@@ -6,6 +6,6 @@ from .models import City
 class CityForm(ModelForm):
     class Meta:
         model = City
-        fields = 'name'
+        fields = ['name']
         widgets = {"name": TextInput(
             attrs={'class': 'input', 'placeholder': ' Enter City Here'})}

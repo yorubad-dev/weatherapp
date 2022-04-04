@@ -14,27 +14,28 @@ def index(request):
         form = CityForm(request.POST)
         form.save()
 
-    form = form
+    form = CityForm()
+    weather_data = []
 
     cities = City.objects.all()
-    weather_data = []
     for city in cities:
-        response = requests.get(format(city)).json()
+        response = requests.get(url.format(city)).json()
 
-    city_weather = {
-        'city': city,
-        'temperature': response['main']['temp'],
-        'description': response['weather'][0]['description'],
-        'icon': response['weather'][0]['icon'],
-        'humidity': response['main']['humidity'],
-        'pressure': response['main']['pressure'],
-        'wind': response['wind']['speed']
-    }
 
-    weather_data.append(city_weather)
+        city_weather = {
+            'city': city.name,
+            'temperature': response['main']['temp'],
+            'description': response['weather'][0]['description'],
+            'icon': response['weather'][0]['icon'],
+            'humidity': response['main']['humidity'],
+            'pressure': response['main']['pressure'],
+            'wind': response['wind']['speed']
+        }
+
+        weather_data.append(city_weather)
 
     context = {
         'weather_data': weather_data,
-        'form':form
+        'form': form
     }
     return render(request, 'the_weather/index.html', context)
