@@ -11,7 +11,7 @@ def index(request):
     cities = City.objects.all()
     weather_data = []
     for city in cities:
-        response = requests.get(format(url)).json()
+        response = requests.get(format(city)).json()
 
     city_weather = {
         'city': city,
