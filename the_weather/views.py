@@ -1,13 +1,17 @@
 from django.shortcuts import render
 import requests
 
+from the_weather.models import City
+
 # Create your views here.
 def index(request):
     
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=090ffecfae05341a427634840e247205'
 
-    response = requests.get(format(url)).json()
-    
+    cities = City.objects.all()
+    weather_data = []
+    for city in cities:
+        response = requests.get(format(url)).json()
 
     city_weather = {
         'city': city,
@@ -18,3 +22,5 @@ def index(request):
         'pressure': response['main']['pressure'],
         'wind': response['wind']['speed']
     }
+
+    weather_data.append(city_weather)
