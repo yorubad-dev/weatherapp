@@ -19,7 +19,7 @@ def index(request):
             new_city = form.cleaned_data['name']
             existing_city_count = City.objects.filter(name=new_city).count()
             if existing_city_count == 0:
-                response = requests.get(url.format(new_city)).json()    
+                response = requests.get(url.format(new_city)).json()
                 if response['cod'] == 200:
                     msg = 'City Added Successfully'
                     form.save()
@@ -42,7 +42,6 @@ def index(request):
     for city in cities:
         response = requests.get(url.format(city)).json()
 
-
         city_weather = {
             'city': city.name,
             'temperature': response['main']['temp'],
@@ -63,6 +62,7 @@ def index(request):
 
     }
     return render(request, 'the_weather/index.html', context)
+
 
 def delete_city(request, city_name):
     City.objects.get(name=city_name).delete()
