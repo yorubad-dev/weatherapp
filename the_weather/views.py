@@ -9,6 +9,9 @@ from the_weather.models import City
 def index(request):
 
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=090ffecfae05341a427634840e247205'
+    err_msg = ''
+    message = ''
+    message_class = ''
 
     if request.method == 'POST':
         form = CityForm(request.POST)
@@ -16,10 +19,21 @@ def index(request):
             new_city = form.cleaned_data['name']
             existing_city_count = City.objects.filter(name=new_city).count()
             if existing_city_count == 0:
-                message = 'City Added Successfully'
-                form.save()
+                response = requests.get(url.format(new_city)).json()    
+                if response['cod'] == 200:
+                    message = 'City Added Successfully'
+                    form.save()
+                else:
+                    err_message = 'City weather record not available at moment'
             else:
-                err_msg = 'City Already Exist'
+                err_message = 'City Already Exist'
+
+    if err_msg:
+        err_msg = err_message
+        message_class = 'is-danger'
+    else:
+        message = message
+        message_class = 'is-success'
 
     form = CityForm()
     weather_data = []
